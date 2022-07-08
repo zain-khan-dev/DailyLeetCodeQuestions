@@ -1,0 +1,69 @@
+class Solution:
+    
+    def minCost(self, houses: List[int], cost: List[List[int]], m: int, n: int, target: int) -> int:
+        
+        dp = [[[-1]*(n) for _ in range(target)] for _ in range(m) ]
+    
+        i = 0
+        while(i < m):
+            j = 0
+            while(j < min([i+1, target])): # get for each target
+                k = 0
+                while(k < n): # if curr is colored with k get the minimum from previous index for each color
+                    if(houses[i] != 0 and houses[i] != k+1):
+                        k += 1
+                        continue
+                    prev_k = 0
+                    minCost = -1
+                    if(i == 0):
+                        if(houses[i] == 0):
+                            dp[i][j][k] = cost[i][k]
+                        else:
+                            dp[i][j][k] = 0
+                        k += 1
+                        continue
+                    while(prev_k < n): # iterate for each color of previous 
+                        new_cost = -1
+                        if(k == prev_k): # if curr_color is same as previous color then check within same target
+                            new_cost = dp[i-1][j][prev_k]
+                            if(new_cost == -1):
+                                prev_k += 1
+                                continue
+                        else:
+                            if(j == 0):
+                                prev_k += 1
+                                continue
+                            else:
+                                new_cost = dp[i-1][j-1][prev_k]
+                        prev_k += 1
+                        if(new_cost == -1):
+                            continue
+                        if(houses[i]  == 0):
+                            new_cost += cost[i][k]
+                        if(minCost == -1):
+                            minCost = new_cost
+                        minCost = min([minCost, new_cost])
+                    dp[i][j][k] = minCost
+                    k += 1
+                j += 1
+            i+= 1
+        
+        
+        i = 0
+        k = 0
+        min_cost = -1
+        while( k < n):
+            if(dp[m-1][target-1][k] ==-1):
+                k += 1
+                continue
+            if(min_cost == -1):
+                min_cost = dp[m-1][target-1][k]
+            min_cost = min([min_cost, dp[m-1][target-1][k]])
+            k += 1
+        return min_cost
+                     
+                    
+                    
+        
+    
+# three state variables curr_index, target, house_paint 

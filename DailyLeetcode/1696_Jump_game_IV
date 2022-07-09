@@ -1,0 +1,20 @@
+class Solution:
+    
+    def maxResult(self, nums: List[int], k: int) -> int:
+        pq = []
+        heapq.heappush(pq, (-nums[0], 0))
+        idx = 1
+        result = []
+        result.append(nums[0])
+        while(idx < len(nums)):
+            num, pdx = pq[0]
+            while(idx - k > pdx):
+                heapq.heappop(pq)
+                num, pdx = pq[0]
+            curr_total = nums[idx] - num
+            heapq.heappush(pq, (-curr_total, idx))
+            heapq.heappush(pq, (num, pdx))
+            result.append(curr_total)
+            idx += 1
+        return result[-1]
+        

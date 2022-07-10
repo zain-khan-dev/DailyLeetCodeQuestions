@@ -1,0 +1,47 @@
+class Solution:
+    
+    def find_parent(self, x):
+        if(self.parent[x] == None):
+            return x
+        parentX = self.find_parent(self.parent[x])
+        self.parent[x] = parentX
+        return parentX
+    
+    def union(self, x, y):
+        parentX = self.find_parent(x)
+        parentY = self.find_parent(y)
+        rankX = self.rank[parentX]
+        rankY = self.rank[parentY]
+        if(parentX == parentY):
+            return
+        if(rankX > rankY):
+            self.rank[x] += rankY
+            self.parent[parentY] = parentX
+        else:
+            self.rank[y] += rankX
+            self.parent[parentX] = parentY
+    
+    def equationsPossible(self, equations: List[str]) -> bool:
+        self.parent = {}
+        self.rank = {}
+        
+        equations.sort(key=lambda a:a[1], reverse=True)
+        
+        for equation in equations:
+            x,op1,op2,y = equation
+            if x not in self.parent:
+                self.rank[x] = 1
+                self.parent[x] = None
+            if y not in self.parent:
+                self.parent[y] = None
+                self.rank[y] = 1
+            if(op1 == '='):
+                self.union(x, y)
+            else:
+                parentX = self.find_parent(x)
+                parentY = self.find_parent(y)
+                if(parentX == parentY):
+                    return False
+        return True
+    
+                

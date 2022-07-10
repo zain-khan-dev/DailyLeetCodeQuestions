@@ -1,0 +1,16 @@
+class Solution:
+    def fillCups(self, amount: List[int]) -> int:
+        pq = [-x for x in amount if x > 0]
+        heapq.heapify(pq)
+        time = 0
+        while(pq):
+            first = heapq.heappop(pq)
+            if(len(pq) > 0):
+                second = heapq.heappop(pq)
+                if(second + 1 < 0):
+                    heapq.heappush(pq, second + 1)
+            if(first + 1 < 0):
+                heapq.heappush(pq, first + 1)
+            time += 1
+        return time
+        

@@ -1,0 +1,32 @@
+class Solution:
+    
+    def checkOrder(self, first, second):
+        first_order = ''.join([c for c in first if c != '_'])
+        second_order = ''.join([c for c in second if c != '_'])
+        return first_order == second_order
+    
+    def canChange(self, start: str, target: str) -> bool:
+        if(len(start) != len(target)):
+            return False
+        if(not self.checkOrder(start, target)):
+            return False
+        
+        
+        require_left = 0
+        current_right = 0
+        for idx in range(len(start)):
+            if(target[idx] == 'L'):
+                require_left += 1
+            if(start[idx] == 'R'):
+                current_right += 1
+            if(start[idx] == 'L'):
+                if(require_left > 0):
+                    require_left -= 1
+                current_right = 0
+
+            if(target[idx] == 'R'):
+                if(current_right == 0):
+                    return False
+                current_right -= 1
+        return require_left == 0
+            
